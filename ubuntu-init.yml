@@ -1,0 +1,95 @@
+- name: Setup development environment on Ubuntu
+  hosts: 127.0.0.1
+  connection: local
+  vars_prompt:
+    - name: "gtduser"
+      prompt: "Enter your GTD username"
+      private: no
+    - name: "gtdpassword"
+      prompt: "Enter your GTD password"
+      private: yes
+    - name: "gituser"
+      prompt: "Enter your GIT username"
+      private: no
+    - name: "gitemail"
+      prompt: "Enter your GIT email"
+      private: no
+
+  tasks:
+    - name: Install git-svn
+      become: yes
+      apt:
+        pkg:
+          - git
+          - git-svn
+    - name: Retrieve Emacs config
+      shell: git svn clone https://svn.wanglianghome.org/elisp/
+      args:
+        chdir: /home/{{ ansible_ssh_user }}
+        creates: elisp/.git/config
+    - name: Retrieve CLI config
+      shell: git svn clone -s https://svn.wanglianghome.org/cliconf/
+      args:
+        chdir: /home/{{ ansible_ssh_user }}
+        creates: cliconf/.git/config
+    - name: Setup CLI config
+      shell: cliconf/setup.sh
+      args:
+        chdir: /home/{{ ansible_ssh_user }}
+        creates: .inputrc
+    - name: Create .gitconfig
+      template:
+        src: /home/{{ ansible_ssh_user }}/cliconf/gitconfig
+        dest: /home/{{ ansible_ssh_user }}/.gitconfig
+    - name: Retrieve GTD files
+      shell: echo '{{ gtdpassword }}' | git svn clone --username {{ gtduser }} https://svn.wanglianghome.org/gtd/
+      args:
+        chdir: /home/{{ ansible_ssh_user }}
+        creates: gtd/.git/config
+    - name: Install Emacs packages
+      become: yes
+      apt:
+        pkg:
+          - elpa-yaml-mode
+          - elpa-magit
+          - elpa-org-contrib
+          - elpa-yasnippet
+          - elpa-gnuplot-mode
+          - w3m-el
+          - bbdb
+          - emacs-gtk
+          - emacs-common
+          - emacs-goodies-el
+          - gnutls-bin
+          - python3-distutils
+          - python3-ipdb
+          - python3-pip
+          - python-is-python3
+          - ibus-pinyin
+          - fonts-wqy-microhei
+          - fonts-wqy-zenhei
+          - xfonts-wqy
+          - chrome-gnome-shell
+          - plantuml
+    - name: Setup Emacs config
+      shell: elisp/scripts/setup.sh
+      register: emacs_config
+      changed_when: '"wl-ubuntu-init" not in emacs_config.stdout'
+      args:
+        chdir: /home/{{ ansible_ssh_user }}
+    - name: Create BBDB directory
+      file:
+        path: /home/{{ ansible_ssh_user }}/edata
+        state: directory
+    - name: Touch BBDB file
+      shell: touch /home/{{ ansible_ssh_user }}/edata/bbdb
+      args:
+        creates: /home/{{ ansible_ssh_user }}/edata/bbdb
+    - name: Retrieve 3rd party Emacs packages
+      shell: emacs -batch -l ~/.emacs --eval="(wl-ubuntu-install-packages)"
+      args:
+        creates: /home/{{ ansible_ssh_user }}/elisp/3rd-party-lib/psvn.elc
+    - name: Install Python packages
+      pip:
+        name:
+          - "python-lsp-server[all]"

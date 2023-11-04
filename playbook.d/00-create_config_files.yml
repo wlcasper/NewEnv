@@ -1,0 +1,12 @@
+- name: Create various config files
+  include: "{{ config_item }}"
+  loop:
+    - 01-aliases.yml
+    - 02-bashrc.yml
+    - 03-gitconfig.yml
+    - 04-gnupg.yml
+    - 05-inputrc.yml
+    - 06-screenrc.yml
+    - 07-sshconfig.yml
+  loop_control:
+    loop_var: config_item

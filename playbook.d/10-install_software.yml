@@ -1,0 +1,5 @@
+- name: Install software
+  include: "{{ item }}"
+  loop:
+    - 11-apt.yml
+    - 12-pip.yml

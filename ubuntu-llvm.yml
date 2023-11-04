@@ -1,0 +1,19 @@
+- name: Setup LLVM development environment on Ubuntu
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Install build tools
+      become: yes
+      apt:
+        pkg:
+          - build-essential
+          - cmake
+          - make
+          - git
+    - name: Clone llvm source code
+      git:
+        repo: https://github.com/llvm/llvm-project.git
+        dest: /home/{{ ansible_ssh_user }}/src/llvm-project
+        update: no

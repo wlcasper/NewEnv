@@ -1,0 +1,28 @@
+- name: Install software via apt
+  become: yes
+  apt:
+    pkg:
+      - ansible
+      - bbdb
+      - chrome-gnome-shell
+      - elpa-gnuplot-mode
+      - elpa-magit
+      - elpa-org-contrib
+      - elpa-yaml-mode
+      - elpa-yasnippet
+      - emacs-common
+      - emacs-goodies-el
+      - emacs-gtk
+      - fonts-wqy-microhei
+      - fonts-wqy-zenhei
+      - git
+      - git-svn
+      - gnutls-bin
+      - ibus-pinyin
+      - plantuml
+      - python-is-python3
+      - python3-distutils
+      - python3-ipdb
+      - python3-pip
+      - w3m-el
+      - xfonts-wqy

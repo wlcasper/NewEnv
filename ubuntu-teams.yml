@@ -1,0 +1,15 @@
+- name: Setup volume control for MS Teams
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Install dependencies
+      become: yes
+      apt:
+        pkg:
+          - pasystray
+          - pavucontrol
+    - name: Add user to puls group
+      become: yes
+      shell: usermod -a -G pulse $USER

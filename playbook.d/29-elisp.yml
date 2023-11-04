@@ -1,0 +1,44 @@
+- name: Check if elisp has been cloned
+  stat:
+    path: /home/{{ ansible_ssh_user }}/elisp/.git/config
+  register: elisp_repo
+- name: Clone Emacs config
+  shell: git svn clone https://svn.wanglianghome.org/elisp/
+  args:
+    chdir: /home/{{ ansible_ssh_user }}
+    creates: elisp/.git/config
+  when: not elisp_repo.stat.exists
+- name: Update Emacs config
+  shell: git svn rebase
+  args:
+    chdir: /home/{{ ansible_ssh_user }}/elisp
+  when: elisp_repo.stat.exists
+- name: Enable Emacs config
+  blockinfile:
+    path: /home/{{ ansible_ssh_user }}/.emacs
+    backup: yes
+    create: yes
+    marker: "; {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      (setq wl-work-smtp-local-domain "office365.com")
+      (setq wl-work-smtp-local-domain "birentech.com")
+
+      (setq user-mail-address "netcasper@gmail.com")
+      (add-to-list 'load-path "~/elisp")
+      (require 'wl-ubuntu-init)
+- name: Create BBDB directory
+  file:
+    path: /home/{{ ansible_ssh_user }}/edata
+    state: directory
+- name: Touch BBDB file
+  shell: touch /home/{{ ansible_ssh_user }}/edata/bbdb
+  args:
+    creates: /home/{{ ansible_ssh_user }}/edata/bbdb
+- name: Copy authinfo
+  copy:
+    src: /home/{{ ansible_ssh_user }}/.authinfo.gpg
+    dest: /home/{{ ansible_ssh_user }}/.authinfo.gpg
+- name: Retrieve 3rd party Emacs packages
+  shell: emacs -batch -l ~/.emacs --eval="(wl-ubuntu-install-packages)"
+  args:
+    creates: /home/{{ ansible_ssh_user }}/elisp/3rd-party-lib/psvn.elc

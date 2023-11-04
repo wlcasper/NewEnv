@@ -1,0 +1,28 @@
+- name: Create .screenrc
+  copy:
+    dest: "~/.screenrc"
+    content: |
+      startup_message off
+
+      termcapinfo xterm ti@:te@
+      altscreen on
+
+      hardstatus alwayslastline '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f %t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
+
+      escape ^\\\
+
+      bind \\ quit
+
+      vbell off
+      defscrollback 1000
+
+      bind E screen -t Emacs emacs -nw
+      bind I screen -t info  info
+      chdir
+
+      shell -bash
+      shelltitle shell
+
+      screen -t build   0
+      screen -t testrun 1
+      screen -t misc    2

@@ -1,0 +1,5 @@
+- name: Clone a few repositories
+  include: "{{ item }}"
+  loop:
+    - 21-cliconf.yml
+    - 29-elisp.yml

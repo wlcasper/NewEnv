@@ -1,0 +1,7 @@
+- name: Copy GnuPG config files
+  copy:
+    src: '~/.gnupg'
+    dest: '~/'
+    owner: liang
+    group: liang
+    mode: '0700'

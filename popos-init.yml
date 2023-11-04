@@ -1,0 +1,10 @@
+- name: Setup development environment on Pop!_OS
+  hosts: popos
+
+  tasks:
+    - name: Create various config files
+      include: "playbook.d/00-create_config_files.yml"
+    - name: Install software
+      include: "playbook.d/10-install_software.yml"
+    - name: Clone a few repositories
+      include: "playbook.d/20-clone_repos.yml"

@@ -1,0 +1,22 @@
+- name: Install KVM
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Install dependencies
+      become: yes
+      apt:
+        pkg:
+          - bridge-utils
+          - cpu-checker
+          - libvirt-clients
+          - libvirt-daemon
+          - qemu
+          - qemu-kvm
+    - name: Add user to libvirt group
+      become: yes
+      shell: usermod -a -G libvirt $USER
+    - name: Add user to kvm group
+      become: yes
+      shell: usermod -a -G kvm $USER

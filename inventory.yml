@@ -1,0 +1,26 @@
+all:
+  vars:
+    ansible_user: liang
+    ansible_python_interpreter: /usr/bin/python3
+  children:
+    ubuntu:
+      hosts:
+        192.168.2.160:
+        192.168.2.7:
+    popos:
+      hosts:
+        192.168.2.122:
+        192.168.2.134:
+    debian:
+      hosts:
+        192.168.2.111: # check ip later
+    apt:
+      hosts:
+        192.168.2.160:
+        192.168.2.7:
+        192.168.2.122:
+        192.168.2.134:
+        192.168.2.111: # debian check ip later
+    usb:
+      hosts:
+        192.168.2.134:

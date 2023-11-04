@@ -1,0 +1,7 @@
+- name: Create .inputrc
+  copy:
+    dest: "~/.inputrc"
+    content: |
+      "\e[A": history-search-backward
+      "\e[B": history-search-forward
+      set completion-ignore-case on

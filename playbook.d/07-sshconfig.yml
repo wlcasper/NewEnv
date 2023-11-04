@@ -1,0 +1,31 @@
+- name: Create ssh directory
+  file:
+    path: "~/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: Create ssh key
+  openssh_keypair:
+    path: "~/.ssh/id_ed25519"
+    type: "ed25519"
+    state: present
+
+- name: Create ssh config
+  copy:
+    dest: "~/.ssh/config"
+    content: |
+      Host hpi5
+      HostName 192.168.2.160
+      User liang
+      ForwardAgent yes
+
+      Host um790pro
+      HostName 192.168.2.122
+      User liang
+      ForwardAgent yes
+
+- name: Deploy ssh key
+  authorized_key:
+    user: liang
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

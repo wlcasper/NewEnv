@@ -1,0 +1,8 @@
+- name: Create .aliases
+  copy:
+    dest: "~/.aliases"
+    content: |
+      alias ecnw='emacsclient --no-wait'
+      alias ec='emacsclient'
+      alias ecc='emacsclient -c'
+      alias ect='emacsclient -t'

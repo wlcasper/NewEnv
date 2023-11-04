@@ -1,0 +1,4 @@
+- name: Customize bashrc
+  lineinfile:
+    path: '~/.bashrc'
+    line: 'source ${HOME}/cliconf/bashrc'

@@ -1,0 +1,19 @@
+- name: Create .gitconfig
+  copy:
+    dest: '~/.gitconfig'
+    content: |
+      [user]
+      name = Liang Wang
+      email = netcasper@gmail.com
+
+      [alias]
+      st = status
+      br = branch
+      co = checkout
+      ci = commit
+
+      [color]
+      branch = auto
+      diff = auto
+      interactive = auto
+      status = auto
